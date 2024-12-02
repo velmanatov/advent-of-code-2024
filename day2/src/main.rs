@@ -13,8 +13,8 @@ fn main() {
 
     let lines: Vec<&str> = contents.split('\n').collect();
 
-    // iterate over lines collecting an array of 1s and 0s for each based upon the result of is_safe(). Sum to get the answer for Part 1
-    let score: i32 = lines.iter().map(|l| is_safe(l) as i32).collect::<Vec<i32>>().iter().sum();
+    // iterate over lines counting all where is_safe() returns true. Gives the answer for Part 1
+    let score: i32 = lines.iter().filter(|l| is_safe(l)).count() as i32;
 
     println!("score: {score}")
 }
