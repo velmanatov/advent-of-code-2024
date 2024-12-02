@@ -13,7 +13,7 @@ fn main() {
 
     let lines: Vec<&str> = contents.split('\n').collect();
 
-    // iterate over lines counting all where is_safe() returns true. Gives the answer for Part 1
+    // iterate over lines counting all where is_safe1() returns true for Part 1. And then similarly with is_safe2 for Part.
     let answer1: i32 = lines.iter().filter(|l| is_safe1(l)).count() as i32;
     let answer2: i32 = lines.iter().filter(|l| is_safe2(l)).count() as i32;
 
