@@ -28,25 +28,24 @@ fn is_safe1(line: &str) -> bool {
 }
 
 // takes a line and returns true if safe (according to Part 1) - i.e. as per is_safe1
-// otherwise iteratively checks if the line is safe when a single number is removed. Returns true if there is any case where that applies
+// otherwise iteratively checks if the line is safe when a single number is removed.
+// returns true if there is any case where that produces a safe line, false if not safe in either case
 fn is_safe2(line: &str) -> bool {
     let is_safe1: bool = is_safe1(line);
     let mut is_safe2: bool = false;
 
+    // we only need to check the extra conditions for part 2 if not "safe" according to part 1
     if !is_safe1 {
         let values: Vec<i32> = line.split(" ").map(|n| n.parse::<i32>().unwrap()).collect();
-        // this is where I couldn't find a more rust-like way to do what I wanted... so iterate over values... mutate the values to remove each in turn
-        // if any one is "safe" with the value removed then we can break as it is safe according to part 2 of the problem
+        // iterate over values... mutate the values to remove each one from the line in turn
+        // if any adjusted line is "safe" with the value removed then the line is safe according to part 2 of the problem
         // this could also be optimised quite a bit. e.g. if the element in question is not one that is part of a pair with an invalid diff we do not really need
         // to check it.
-        for (i, _) in values.iter().enumerate() {
-            let mut adjusted_values = values.clone();
-            adjusted_values.remove(i);
-            is_safe2 = is_safe(adjusted_values);
-            if is_safe2 {
-                break;
-            }
-        }
+        is_safe2 = values
+            .iter()
+            .enumerate()
+            .map(|(i, _)| { let mut x = values.clone(); x.remove(i); return x; })
+            .any(|values| is_safe(values));
     }
 
     return is_safe1 || is_safe2;   
