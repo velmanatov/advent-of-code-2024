@@ -97,26 +97,19 @@ def part_1_reimplementation(text_grid: str):
         for x in range(0, max_y):
             if x < max_x-3 and check_direction(x, y, 1, 0, lines):
                 count = count + 1
-            if x >= 3 and check_direction(x, y, -1, 0, lines):
-                count = count + 1
             if y < max_y-3 and check_direction(x, y, 0, 1, lines):
-                count = count + 1
-            if y >=3 and check_direction(x, y, 0, -1, lines):
                 count = count + 1
             if x < max_x-3 and y < max_y-3 and check_direction(x, y, 1, 1, lines):
                 count = count + 1
-            if x < max_x-3 and y >=3 and check_direction(x, y, 1, -1, lines):
-                count = count + 1
             if x >= 3 and y < max_y-3 and check_direction(x, y, -1, 1, lines):
-                count = count + 1             
-            if x >= 3 and y >= 3 and check_direction(x, y, -1, -1, lines):
-                count = count + 1  
+                count = count + 1
 
     return count
 
-# check if the 4 letters found in lines starting at a specified x, y position in a direction defined as a dx, dy vector spell out XMAS
+# check if the 4 letters found in lines starting at a specified x, y position in a direction defined as a dx, dy vector spell out XMAS or SAMX
 def check_direction(x: int, y: int, dx: int, dy: int, lines: list[str]):
-    return lines[y][x] == 'X' and lines [y + dy][x + dx] == 'M' and lines[y + 2*dy][x + 2*dx] == 'A' and lines[y + 3*dy][x + 3*dx] == 'S'
+    return (lines[y][x] == 'X' and lines [y + dy][x + dx] == 'M' and lines[y + 2*dy][x + 2*dx] == 'A' and lines[y + 3*dy][x + 3*dx] == 'S') or (
+        lines[y][x] == 'S' and lines [y + dy][x + dx] == 'A' and lines[y + 2*dy][x + 2*dx] == 'M' and lines[y + 3*dy][x + 3*dx] == 'X')
 
 # part 1 is simply to count all occurrences of XMAS - horizontally, vertically and diagonally in the grid. And also considering backwards matches
 answer1 = 0
