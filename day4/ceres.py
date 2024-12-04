@@ -20,7 +20,7 @@ def get_diagonal_lines(text_grid, min_line_length):
     max_x = len(lines[0])
     max_y = len(lines)
 
-    # traverse diagonals starting on top row
+    # traverse diagonals starting on top row ->
     for x in range(0, max_x - min_line_length + 1):
         line = ''
         offset = 0
@@ -29,7 +29,7 @@ def get_diagonal_lines(text_grid, min_line_length):
             offset = offset + 1
         diagonal_lines.append(line)
 
-    # traverse diagonals starting in left col
+    # traverse diagonals starting in left col ->
     for y in range(1, max_y - min_line_length + 1):
         line = ''
         offset = 0
@@ -38,7 +38,7 @@ def get_diagonal_lines(text_grid, min_line_length):
             offset = offset + 1
         diagonal_lines.append(line)
 
-    # traverse diagonals starting on top row
+    # traverse diagonals starting on top row <-
     for x in range(max_x - 1, min_line_length - 1, -1):
         line = ''
         offset = 0
@@ -47,7 +47,7 @@ def get_diagonal_lines(text_grid, min_line_length):
             offset = offset + 1
         diagonal_lines.append(line)
 
-    # traverse diagonals starting in right col
+    # traverse diagonals starting in right col <-
     for y in range(1, max_y - min_line_length + 1):
         line = ''
         offset = 0
@@ -58,7 +58,32 @@ def get_diagonal_lines(text_grid, min_line_length):
 
     return diagonal_lines
 
-# part 1 is simply to count all occurrences of XMAS - horizontally, vertically and diagonally in teh grid. And also considering backwards matches
+# part 2 is different count MAS (or SAM) in an x-shape like below.
+# I think there are only these 4 sets of 3x3 blocks that we are looking for:
+
+# M-S   S-M   M-M   S-S
+# -A-   -A-   -A-   -A-
+# M-S   S-M   S-S   M-M
+def get_x_mas_count(text_grid):
+    lines = text_grid.splitlines()
+
+    max_x = len(lines[0])
+    max_y = len(lines)
+    count = 0
+
+    for y in range(0, max_x-2):
+        for x in range(0, max_y-2):
+            if lines[y + 1][x +1] == 'A' and (
+                    (lines[y][x] == 'M' and lines[y][x+2] =='S' and lines[y+2][x] == 'M' and lines[y+2][x+2] == 'S') or
+                    (lines[y][x] == 'S' and lines[y][x+2] =='M' and lines[y+2][x] == 'S' and lines[y+2][x+2] == 'M') or
+                    (lines[y][x] == 'M' and lines[y][x+2] =='M' and lines[y+2][x] == 'S' and lines[y+2][x+2] == 'S') or
+                    (lines[y][x] == 'S' and lines[y][x+2] =='S' and lines[y+2][x] == 'M' and lines[y+2][x+2] == 'M') 
+                ):
+                count = count + 1
+
+    return count
+
+# part 1 is simply to count all occurrences of XMAS - horizontally, vertically and diagonally in the grid. And also considering backwards matches
 answer1 = 0
 # no point iterating over lines for these ones that are already in the correct orientation
 answer1 += len(re.findall("(?=(XMAS|SAMX))", file_data))
@@ -71,4 +96,5 @@ for vertical_line in get_vertical_lines(file_data):
 for diagonal_line in get_diagonal_lines(file_data, 4):
     answer1 += len(re.findall("(?=(XMAS|SAMX))", diagonal_line))
 
-print(answer1)
+print('Answer 1', answer1)
+print('Answer 2', get_x_mas_count(file_data))
