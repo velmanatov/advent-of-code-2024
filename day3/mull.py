@@ -1,6 +1,6 @@
 import re
 
-# given come input text part out all the mul(a,b) and return the sum of all a*b
+# given some input text parse out all the mul(a,b) and return the sum of all a*b
 def get_line_muls(text):
     answer = 0
     muls = re.findall("mul\\((\\d{1,3}),(\\d{1,3})\\)", text)
@@ -32,7 +32,7 @@ while end_index != -1:
     else:
         end_index = remaining_text.find("do()")
 
-    # chop the string that we need to scan down as we go so that we son;t repeatedly scan the whole thing
+    # chop the string that we need to scan down as we go so that we don't repeatedly scan the whole thing
     if end_index != -1:
         remaining_text = remaining_text[end_index:]   
     do = not do
