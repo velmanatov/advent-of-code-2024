@@ -1,4 +1,4 @@
-file_obj = open("input.txt", "r") 
+file_obj = open("calibration.txt", "r") 
 file_data = file_obj.read() 
 file_obj.close()
 
@@ -73,8 +73,8 @@ def part_2_brute_force(start_x, start_y):
     # only technically need the count but we can visualise the positions at the end if we rememembwr them
     obstacles = []
 
-    for y in range(0, len(grid)-1):
-        for x in range(0, len(grid[0])-1):
+    for y in range(0, len(grid)):
+        for x in range(0, len(grid[0])):
             if grid[y][x] == 'X' and (x, y) != (start_x, start_y):
                 update_grid(x, y, '#')
                 if part_1(start_x, start_y, True) < 0:
