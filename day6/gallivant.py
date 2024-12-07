@@ -1,4 +1,4 @@
-file_obj = open("calibration.txt", "r") 
+file_obj = open("input.txt", "r") 
 file_data = file_obj.read() 
 file_obj.close()
 
@@ -22,19 +22,19 @@ class Guard:
     # check ahead for obstacle. turn if necessary. return True if would exit grid on next move
     def check_ahead(self, grid):
         next_x = self.current_position[0] + self.current_direction[0]
-        next_y = self.current_position[1] + self.current_direction[1]
-        
-        max_x = len(grid[0]) 
-        max_y = len(grid)
+        next_y = self.current_position[1] + self.current_direction[1]      
 
         #check if we're out grid bounds now
-        if next_x < 0 or next_y < 0 or next_x >= max_x or next_y >= max_y:
+        if next_x < 0 or next_y < 0 or next_x >= len(grid[0]) or next_y >= len(grid):
             return True
 
         # look ahead for # and change direction if necessary
         if grid[next_y][next_x] == '#':
             self.turn()
-
+            # when we add obstacle we can create the need to turn twice... so check if we actually need to turn again!
+            if grid[self.current_position[1] + self.current_direction[1]][self.current_position[0] + self.current_direction[0]] == '#':
+                self.turn()
+            
         return False   
 
     def move_one_square(self, do_trace = True):
