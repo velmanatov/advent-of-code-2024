@@ -13,23 +13,27 @@ public class BridgeRepair {
     public static void main(String[] args) {
         try {
             Long answer1 = 0l;
+            Long answer2 = 0l;
             File file = new File("./day7/input.txt");
             Scanner reader = new Scanner(file);
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();
                 CalibrationEquation equation = GetEquation(line);
-                if (equation.CanBeMadeTrue()) {
+                if (equation.CanBeMadeTrue(1)) {
                     answer1 += equation.testValue;
+                }
+                if (equation.CanBeMadeTrue(2)) {
+                    answer2 += equation.testValue;
                 }
              }
              System.out.println("Answer 1: " + answer1);
+             System.out.println("Answer 2: " + answer2);
              reader.close();
         }
         catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-
     }
 
     private static CalibrationEquation GetEquation(String line) {
@@ -57,25 +61,28 @@ class CalibrationEquation {
     public Long testValue;
     public List<Long> operands;
 
-    public boolean CanBeMadeTrue() {
+    public boolean CanBeMadeTrue(Integer part) {
         // get the first set of possible results from applying all operands to the 1st and 2nd number
-        List<Long> results = ApplyAllOperations(List.of(operands.get(0)), operands.get(1));
+        List<Long> results = ApplyAllOperations(List.of(operands.get(0)), operands.get(1), part);
 
-        // note that we are finidng all combinations. it would be more efficient to to depth first search and stop when we find any that give the correct answer
+        // note that we are finding all combinations. it would be more efficient to to depth first search and stop when we find any that give the correct answer
         for(Integer i = 2; i < operands.size(); i ++) {
-            results = ApplyAllOperations(results, operands.get(i));
+            results = ApplyAllOperations(results, operands.get(i), part);
         }
 
         return results.contains(testValue);
     }
 
-    private List<Long> ApplyAllOperations(List<Long> interimValues, Long value) {
+    private List<Long> ApplyAllOperations(List<Long> interimValues, Long value, Integer part) {
         List<Long> results = new ArrayList<Long>();
 
         for (Long a: interimValues)
         {
             results.add(a + value);
             results.add(a * value);
+            if (part == 2) {
+                results.add(Long.parseLong(a.toString() + value.toString()));
+            }
         }
         return results;
     }
