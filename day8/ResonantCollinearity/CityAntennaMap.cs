@@ -9,7 +9,7 @@ public class CityAntennaMap {
         return x < MapWidth && x >= 0 && y < MapHeight && y >= 0;
     }
 
-    public string GetMapStringWithAntinodes(HashSet<(int, int)> antinodes) {
+    public string GetMapStringWithAntinodes(IEnumerable<(int, int)> antinodes) {
         var result = "";
         for (var y = 0; y < MapHeight; y++) {
             for (var x = 0; x < MapWidth; x++) {
