@@ -3,6 +3,8 @@
 [Bb]in/
 [Oo]bj/
 
-
 # Cargo Build products
 target/
+
+# Java Build Products
+*.class
