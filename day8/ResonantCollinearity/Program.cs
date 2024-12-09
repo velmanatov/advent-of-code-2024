@@ -1,45 +1,63 @@
 ﻿var map = ReadMapFromFile("input.txt");
+CheckForAntinodes(map, false);
+CheckForAntinodes(map, true);
 
-var distinctFrequencies = map.DistinctAntennaeFrequencies;
+static void CheckForAntinodes(CityAntennaMap map, bool isPart2) {
+    var distinctFrequencies = map.DistinctAntennaeFrequencies;
+    // set to track unique antinode positions identified
+    HashSet<(int, int)> antinodes = [];
 
-// set to track unique antinode positions identified
-HashSet<(int, int)> antinodes = [];
+    foreach(var frequency in distinctFrequencies) {
+        var antennae = map.Antennae[frequency].ToList();
+        // pair all combinations of antennae with the same frequencies... check for antinodes
+        if (antennae.Count >= 2) {
+            for(int i = 0; i < antennae.Count - 1; i++) {
+                for(int j = i + 1; j < antennae.Count; j++) {
 
-foreach(var frequency in distinctFrequencies) {
-    var antennae = map.Antennae[frequency].ToList();
-    //Console.WriteLine(string.Join(", ", antennae));
-    // pair all combinations of antennae with the same frequencies... check for antinodes
-    if (antennae.Count >= 2) {
-        for(int i = 0; i < antennae.Count - 1; i++) {
-            for(int j = i + 1; j < antennae.Count; j++) {
+                    var antenna1 = antennae.ElementAt(i);
+                    var antenna2 = antennae.ElementAt(j);
 
-                var antenna1 = antennae.ElementAt(i);
-                var antenna2 = antennae.ElementAt(j);
+                    bool inMapBounds = true;
 
-                var possibleAntinode1 = new { X = 2 * antenna1.X - antenna2.X, Y = 2 * antenna1.Y - antenna2.Y };
-                var possibleAntinode2 = new { X = 2 * antenna2.X - antenna1.X, Y = 2 * antenna2.Y - antenna1.Y };
-        
-                //Console.Write($"Checking - {antenna1} - {antenna2}");
+                    // for part two the two antenna are always antinodes
+                    if (isPart2) {
+                        antinodes.Add((antenna1.X, antenna1.Y));
+                        antinodes.Add((antenna2.X, antenna2.Y));
+                    }
 
-                if (map.InMapBounds(possibleAntinode1.X, possibleAntinode1.Y)) {
-                    antinodes.Add((possibleAntinode1.X, possibleAntinode1.Y));
-                    //Console.Write($" - ANTINODE 1 : {possibleAntinode1.X}, {possibleAntinode1.Y}");
+                    int dx = antenna2.X - antenna1.X;
+                    int dy = antenna2.Y - antenna1.Y;
+
+                    AddAntinodesInDirection(map, antenna1.X, antenna1.Y, dx, dy, antinodes, isPart2);
+                    AddAntinodesInDirection(map, antenna2.X, antenna2.Y, -dx, -dy, antinodes, isPart2);
                 }
-                if (map.InMapBounds(possibleAntinode2.X, possibleAntinode2.Y)) {
-                    antinodes.Add((possibleAntinode2.X, possibleAntinode2.Y));
-                    //Console.Write($" - ANTINODE 2 : {possibleAntinode2.X}, {possibleAntinode2.Y}");                    
-                }
-
-                //Console.WriteLine($" - Count - {antinodes.Count}");
-            }
-        }  
+            }  
+        }
     }
+
+    var mapStr = map.GetMapStringWithAntinodes(antinodes);
+
+    Console.WriteLine(mapStr);
+    Console.WriteLine($"Answer {(isPart2 ? 2 : 1)}: {antinodes.Count}");
 }
 
-var mapStr = map.GetMapStringWithAntinodes(antinodes);
+static void AddAntinodesInDirection(CityAntennaMap map, int startX, int startY, int dx, int dy, HashSet<(int, int)> antinodes, bool isPart2) {
+    bool inMapBounds = true;
+    int multiple = 1;
+    while (inMapBounds) {
+        var possibleAntinode1 = new { X = startX- (multiple * dx), Y = startY - (multiple * dy) };
 
-Console.WriteLine(mapStr);
-Console.WriteLine($"Answer 1: {antinodes.Count}");
+        inMapBounds = map.InMapBounds(possibleAntinode1.X, possibleAntinode1.Y);
+        if (inMapBounds) {
+            antinodes.Add((possibleAntinode1.X, possibleAntinode1.Y));                            
+        }
+
+        multiple++;
+        // for Part 2 we can go multiple dx, dy away from the node but for Part 1 e will just break
+        if (!isPart2)
+            break;
+    }
+}
 
 static CityAntennaMap ReadMapFromFile(string filePath)
 {
