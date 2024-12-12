@@ -11,3 +11,10 @@ target/
 
 # Java Build Products
 *.class
+
+# node dependencies
+node_modules
+
+# Day 10 - transpiled Javascript products
+hoofit.js
+hoofit.js.map
