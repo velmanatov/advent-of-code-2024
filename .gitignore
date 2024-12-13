@@ -15,6 +15,6 @@ target/
 # node dependencies
 node_modules
 
-# Day 10 - transpiled Javascript products
-hoofit.js
-hoofit.js.map
+# Transpiled Javascript products (I'm not using any raw Javascript)
+*.js
+*.js.map
